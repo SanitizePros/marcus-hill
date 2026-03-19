@@ -343,8 +343,11 @@ async function genVoice(){
   document.getElementById('ebadge').textContent='Rendering...';
   try {
     const data = await api('elevenlabs', {text:script,model_id:'eleven_monolingual_v1',voice_settings:{stability:document.getElementById('el-s').value/100,similarity_boost:document.getElementById('el-m').value/100}});
-    if(!data.audio_base64) throw new Error('No audio returned');
-    const bytes=Uint8Array.from(atob(data.audio_base64),c=>c.charCodeAt(0));
+    if(!data.audio_base64) throw new Error('No audio returned: '+JSON.stringify(data).substring(0,100));
+    const b64=data.audio_base64;
+    const binStr=atob(b64);
+    const bytes=new Uint8Array(binStr.length);
+    for(let i=0;i<binStr.length;i++) bytes[i]=binStr.charCodeAt(i);
     const blob=new Blob([bytes],{type:'audio/mpeg'});
     audBlob=blob; audUrl=URL.createObjectURL(blob);
     const a=document.getElementById('au'); a.src=audUrl;
