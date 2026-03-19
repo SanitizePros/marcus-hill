@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcus Hill — Content Command Center</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Bebas+Neue&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0A0A;--surface:#111;--surface2:#1A1A1A;--surface3:#222;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0EDE8;--text2:#888;--text3:#444;--accent:#E8D5A0;--accent2:#C4A96C;--red:#FF4455;--green:#44FF88;--blue:#4488FF;--purple:#AA77FF;--orange:#FF8844;--teal:#44DDCC;--radius:12px;--radius-sm:8px;}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
+.header{background:var(--surface);border-bottom:1px solid var(--border2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--accent);white-space:nowrap;}
+.logo span{color:var(--text3);font-size:10px;letter-spacing:1px;display:block;font-family:'Space Grotesk',sans-serif;font-weight:400;margin-top:-3px;}
+.nav{display:flex;gap:2px;flex-wrap:wrap;flex:1;justify-content:center;}
+.nav-btn{background:none;border:1px solid transparent;color:var(--text2);padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;transition:all .15s;white-space:nowrap;}
+.nav-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.main{padding:20px;max-width:1120px;margin:0 auto;}
+.page{display:none;}.page.active{display:block;}
+.st{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.st::after{content:'';flex:1;height:1px;background:var(--border);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.ch{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-weight:500;font-size:13px;}
+.cb{padding:16px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.bg{background:rgba(232,213,160,.1);color:var(--accent);border:1px solid rgba(232,213,160,.2);}
+.be{background:rgba(68,221,204,.1);color:var(--teal);border:1px solid rgba(68,221,204,.2);}
+.br{background:rgba(255,136,68,.12);color:var(--orange);border:1px solid rgba(255,136,68,.2);}
+.bw{background:rgba(68,136,255,.12);color:var(--blue);border:1px solid rgba(68,136,255,.2);}
+.bok{background:rgba(68,255,136,.1);color:var(--green);border:1px solid rgba(68,255,136,.2);}
+select,input,textarea{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:var(--radius-sm);padding:8px 10px;font-family:'Space Grotesk',sans-serif;font-size:13px;outline:none;transition:border-color .15s;}
+select:focus,input:focus,textarea:focus{border-color:var(--accent2);}
+textarea{resize:vertical;}select option{background:#1A1A1A;}
+.fl{font-size:11px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.fw{margin-bottom:10px;}
+.btn{background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:9px 16px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;}
+.btn:hover{background:var(--accent2);}.btn:disabled{opacity:.4;cursor:not-allowed;}
+.bs{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:7px 13px;font-family:'Space Grotesk',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;}
+.bs:hover{border-color:var(--accent2);color:var(--accent);}
+.ob{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px;min-height:140px;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;overflow-y:auto;max-height:300px;}
+.ld{display:none;align-items:center;gap:8px;color:var(--text2);font-size:13px;padding:8px 0;}
+.ld.on{display:flex;}
+.ds span{animation:blink 1.4s infinite;}.ds span:nth-child(2){animation-delay:.2s;}.ds span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+.mo{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;}
+.mo img,.mo video{width:100%;height:100%;object-fit:cover;}
+.sb{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;position:relative;overflow:hidden;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.sy::before{background:#FF0000;}.se::before{background:var(--teal);}.sr::before{background:var(--orange);}.sw::before{background:var(--blue);}
+.sl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.sv{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--text);line-height:1;}
+.ss{font-size:10px;color:var(--text3);margin-top:3px;}
+.tr{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:8px;margin-bottom:8px;}
+.ti{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tn{font-size:12px;font-weight:500;flex:1;}
+.ts{font-size:10px;}.ts.ok{color:var(--green);}.ts.off{color:var(--text3);}
+.uz{border:2px dashed var(--border2);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:border-color .15s;}
+.uz:hover{border-color:var(--accent2);}
+.pb{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px;}
+.pf{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .4s;}
+.lg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.li{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;position:relative;aspect-ratio:.75;}
+.li img,.li video{width:100%;height:100%;object-fit:cover;}
+.lt{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.75);padding:4px 6px;font-size:9px;color:var(--accent);}
+.le{grid-column:1/-1;text-align:center;padding:30px;color:var(--text3);font-size:12px;}
+.cl{padding:10px 12px;border-radius:var(--radius-sm);border-left:2px solid var(--accent2);background:rgba(232,213,160,.05);font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.7;}
+.cl.g{border-color:var(--green);background:rgba(68,255,136,.05);}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#000;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .2s;z-index:9999;}
+.toast.show{transform:translateY(0);opacity:1;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">MARCUS HILL <span>Content Command Center</span></div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="P('home',this)">Home</button>
+    <button class="nav-btn" onclick="P('scripts',this)">Scripts</button>
+    <button class="nav-btn" onclick="P('voice',this)">Voice</button>
+    <button class="nav-btn" onclick="P('visuals',this)">Visuals</button>
+    <button class="nav-btn" onclick="P('lipsync',this)">Lip Sync</button>
+    <button class="nav-btn" onclick="P('library',this)">Library</button>
+    <button class="nav-btn" onclick="P('settings',this)">⚙ Settings</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);white-space:nowrap;"><span class="dot"></span>Live</div>
+</div>
+<div class="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="sb">
+    <div class="sc sy"><div class="sl">Scripts</div><div class="sv" id="h-scripts">0</div><div class="ss">Claude AI</div></div>
+    <div class="sc se"><div class="sl">Audio</div><div class="sv" id="h-audio">0</div><div class="ss">ElevenLabs Julius</div></div>
+    <div class="sc sr"><div class="sl">Visuals</div><div class="sv" id="h-visuals">0</div><div class="ss">RunwayML</div></div>
+    <div class="sc sw"><div class="sl">Lip Sync</div><div class="sv" id="h-lipsync">0</div><div class="ss">Wan2.2-S2V · ~$0.20</div></div>
+  </div>
+  <div class="st">Tools</div>
+  <div class="g2">
+    <div>
+      <div class="tr"><div class="ti" style="background:rgba(232,213,160,.1);">🤖</div><div class="tn">Claude API<div style="font-size:10px;color:var(--text2)">Scripts</div></div><div class="ts" id="ts-c">Not set</div></div>
+      <div class="tr"><div class="ti" style="background:rgba(68,221,204,.1);">🎙️</div><div class="tn">ElevenLabs<div style="font-size:10px;color:var(--text2)">Julius voice</div></div><div class="ts" id="ts-e">Not set</div></div>
+      <div class="tr"><div class="ti" style="background:rgba(255,136,68,.1);">🎬</div><div class="tn">RunwayML<div style="font-size:10px;color:var(--text2)">Visuals</div></div><div class="ts" id="ts-r">Not set</div></div>
+    </div>
+    <div>
+      <div class="tr"><div class="ti" style="background:rgba(68,136,255,.1);">💋</div><div class="tn">Wan2.2-S2V<div style="font-size:10px;color:var(--text2)">rsp09b02pp0qy0</div></div><div class="ts" id="ts-w">Not set</div></div>
+      <div class="tr"><div class="ti" style="background:rgba(68,255,136,.1);">📬</div><div class="tn">AgentMail<div style="font-size:10px;color:var(--text2)">marcushill@agentmail.to</div></div><div class="ts" id="ts-a">Not set</div></div>
+      <div class="tr"><div class="ti" style="background:rgba(170,119,255,.1);">📚</div><div class="tn">Library<div style="font-size:10px;color:var(--text2)">Saved outputs</div></div><div class="ts ok" id="ts-l">0 items</div></div>
+    </div>
+  </div>
+  <div class="cl g">API keys are stored securely as Netlify environment variables — never exposed in the browser.</div>
+</div>
+
+<!-- SCRIPTS -->
+<div class="page" id="page-scripts">
+  <div class="st">Script Generator</div>
+  <div class="g2">
+    <div class="card"><div class="ch"><span class="ct">Generate</span><span class="badge bg">Claude AI</span></div><div class="cb">
+      <div class="fw"><div class="fl">Type</div><select id="ct-type"><option value="vlog">📹 YouTube Vlog (2min)</option><option value="tiktok">🎵 TikTok (30sec)</option><option value="podcast">🎙️ Podcast (5-8min)</option><option value="carousel">📱 IG Carousel</option><option value="longform">🎬 Long-Form</option></select></div>
+      <div class="fw"><div class="fl">Topic</div><input id="ct-topic" placeholder="e.g. Found the perfect denim supplier..."/></div>
+      <div class="g2" style="gap:8px;margin-bottom:10px;">
+        <div><div class="fl">Energy</div><select id="ct-energy"><option value="high">🔥 High</option><option value="reflective">💭 Reflective</option><option value="educational">📚 Educational</option><option value="hustle">⚡ Hustle</option></select></div>
+        <div><div class="fl">Day</div><select id="ct-day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+      </div>
+      <div class="fw"><div class="fl">Context</div><textarea id="ct-ctx" style="min-height:55px;" placeholder="Wins, losses, specifics..."></textarea></div>
+      <button class="btn" id="sb" onclick="genScript()"><span id="sbt">Generate Script</span></button>
+    </div></div>
+    <div class="card"><div class="ch"><span class="ct">Output</span><span class="badge bg" id="sbadge">Ready</span></div><div class="cb">
+      <div class="ld" id="sl"><span>Writing...</span><span class="ds"><span>.</span><span>.</span><span>.</span></span></div>
+      <div class="ob" id="so"><span style="color:var(--text3);font-style:italic;">Script appears here.</span></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="bs" onclick="toVoice()">→ Voice</button>
+        <button class="bs" onclick="saveLib('script')">Save</button>
+        <button class="bs" onclick="cp('so')">Copy</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- VOICE -->
+<div class="page" id="page-voice">
+  <div class="st">Voice — ElevenLabs Julius</div>
+  <div class="g2">
+    <div class="card"><div class="ch"><span class="ct">Input</span><span class="badge be">ElevenLabs</span></div><div class="cb">
+      <div class="fw"><div class="fl">Script</div><textarea id="el-txt" style="min-height:130px;" placeholder="Paste script or use → Voice from Scripts..."></textarea></div>
+      <div class="g2" style="gap:8px;margin-bottom:10px;">
+        <div><div class="fl">Stability <span id="stv" style="color:var(--accent)">52%</span></div><input type="range" min="0" max="100" value="52" id="el-s" style="padding:0;" oninput="stv.textContent=this.value+'%'"/></div>
+        <div><div class="fl">Similarity <span id="smv" style="color:var(--accent)">78%</span></div><input type="range" min="0" max="100" value="78" id="el-m" style="padding:0;" oninput="smv.textContent=this.value+'%'"/></div>
+      </div>
+      <button class="btn" id="eb" onclick="genVoice()"><span id="ebt">Generate Julius Voice</span></button>
+    </div></div>
+    <div class="card"><div class="ch"><span class="ct">Audio</span><span class="badge be" id="ebadge">Ready</span></div><div class="cb">
+      <div class="ld" id="el"><span>Rendering...</span><span class="ds"><span>.</span><span>.</span><span>.</span></span></div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <button style="width:34px;height:34px;background:var(--accent);border:none;border-radius:50%;cursor:pointer;font-size:13px;flex-shrink:0;" id="pb" onclick="toggleAudio()">▶</button>
+        <div><strong id="at" style="font-size:12px;display:block;">No audio yet</strong><span id="ad" style="font-size:11px;color:var(--text2);">–</span></div>
+      </div>
+      <audio id="au"></audio>
+      <div style="display:flex;gap:8px;">
+        <button class="bs" onclick="toLS()">→ Lip Sync</button>
+        <button class="bs" onclick="saveLib('audio')">Save</button>
+        <button class="bs" id="edl" style="display:none;" onclick="dlAudio()">Download</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- VISUALS -->
+<div class="page" id="page-visuals">
+  <div class="st">Visuals — RunwayML</div>
+  <div class="g2">
+    <div class="card"><div class="ch"><span class="ct">Configure</span><span class="badge br">RunwayML</span></div><div class="cb">
+      <div class="fw"><div class="fl">Type</div><select id="vt"><option value="thumb">🖼️ Thumbnail</option><option value="broll">🎬 B-Roll</option><option value="tiktok_bg">📱 TikTok BG</option><option value="mood">🎨 Mood Board</option></select></div>
+      <div class="fw"><div class="fl">Describe the Shot</div><textarea id="vp" style="min-height:70px;" placeholder="Marcus Hill, terracotta jacket, urban alley, golden hour..."></textarea></div>
+      <div class="g2" style="gap:8px;margin-bottom:10px;">
+        <div><div class="fl">Style</div><select id="vs"><option value="cinematic">Cinematic</option><option value="urban">Urban Doc</option><option value="clean">Clean</option><option value="dark">Dark Moody</option><option value="vintage">Vintage</option></select></div>
+        <div><div class="fl">Duration</div><select id="vd"><option value="5">5s</option><option value="10" selected>10s</option></select></div>
+      </div>
+      <button class="btn" id="vb" onclick="genVisual()"><span id="vbt">Generate Visual</span></button>
+    </div></div>
+    <div class="card"><div class="ch"><span class="ct">Output</span><span class="badge br" id="vbadge">Ready</span></div><div class="cb">
+      <div class="ld" id="vl"><span>RunwayML generating...</span><span class="ds"><span>.</span><span>.</span><span>.</span></span></div>
+      <div class="mo" id="vo"><div style="text-align:center;color:var(--text3);padding:20px;"><div style="font-size:28px;margin-bottom:6px;">🎬</div><div style="font-size:11px;">Visual appears here</div></div></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="bs" id="vs2" onclick="saveLib('visual')" style="display:none;">Save</button>
+        <button class="bs" id="vdl" onclick="dlVisual()" style="display:none;">Download</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- LIP SYNC -->
+<div class="page" id="page-lipsync">
+  <div class="st">Lip Sync — Wan2.2-S2V <span class="badge bw" style="margin-left:8px;">~$0.20/video</span></div>
+  <div class="g2">
+    <div class="card"><div class="ch"><span class="ct">Input</span><span class="badge bw">Wan2.2-S2V</span></div><div class="cb">
+      <div class="fw"><div class="fl">Marcus Photo</div>
+        <div class="uz" onclick="document.getElementById('lpi').click()">
+          <input type="file" id="lpi" accept="image/*" onchange="lpPhoto(event)" style="display:none;">
+          <div id="lpph"><div style="font-size:22px;margin-bottom:5px;">📸</div><div style="font-size:11px;color:var(--text2);">Click to upload photo</div></div>
+          <img id="lppr" style="display:none;width:100%;border-radius:6px;max-height:130px;object-fit:contain;">
+        </div>
+      </div>
+      <div class="fw"><div class="fl">Audio</div>
+        <div class="uz" onclick="document.getElementById('lai').click()">
+          <input type="file" id="lai" accept="audio/*" onchange="laAudio(event)" style="display:none;">
+          <div id="laph"><div style="font-size:22px;margin-bottom:5px;">🎵</div><div style="font-size:11px;color:var(--text2);">Click to upload audio</div></div>
+          <div id="lapr" style="display:none;padding:8px;background:var(--surface3);border-radius:6px;font-size:11px;color:var(--text2);"></div>
+        </div>
+        <button class="bs" style="width:100%;margin-top:5px;" onclick="useVA()">🎙️ Use Voice Tab Audio</button>
+      </div>
+      <div class="fw"><div class="fl">Resolution</div><select id="lf"><option value="640*480">480p — Fast (~4 min)</option><option value="1280*720">720p — Quality (~8 min)</option></select></div>
+      <button class="btn" id="lb" onclick="genLS()"><span id="lbt">Generate Lip Sync</span></button>
+      <div style="margin-top:6px;font-size:10px;color:var(--text3);text-align:center;">First run ~15 min · Subsequent ~4-8 min</div>
+    </div></div>
+    <div class="card"><div class="ch"><span class="ct">Output</span><span class="badge bw" id="lbadge">Ready</span></div><div class="cb">
+      <div class="ld" id="ll"><span>Wan2.2 rendering...</span><span class="ds"><span>.</span><span>.</span><span>.</span></span></div>
+      <div id="lo" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);aspect-ratio:9/16;max-height:360px;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;color:var(--text3);"><div style="font-size:32px;margin-bottom:8px;">👄</div><div style="font-size:11px;">Lip sync renders here</div></div>
+      </div>
+      <div class="pb" id="lpw" style="display:none;margin-top:8px;"><div class="pf" id="lp"></div></div>
+      <div id="ls" style="font-size:11px;color:var(--text2);text-align:center;margin-top:6px;"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="bs" id="lsv" onclick="saveLib('lipsync')" style="display:none;">Save</button>
+        <button class="bs" id="ldl" onclick="dlLS()" style="display:none;">Download MP4</button>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- LIBRARY -->
+<div class="page" id="page-library">
+  <div class="st">Reference Library</div>
+  <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;" id="lf2">
+    <button class="bs" onclick="fLib('all',this)" style="border-color:var(--accent2);color:var(--accent);">All</button>
+    <button class="bs" onclick="fLib('script',this)">Scripts</button>
+    <button class="bs" onclick="fLib('audio',this)">Audio</button>
+    <button class="bs" onclick="fLib('visual',this)">Visuals</button>
+    <button class="bs" onclick="fLib('lipsync',this)">Lip Sync</button>
+  </div>
+  <div class="lg" id="lg"><div class="le">No items yet. Generate and save content.</div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="st">Configuration</div>
+  <div class="cl">Your API keys are set as <strong>Netlify environment variables</strong> — secure, server-side, never in the browser. Follow the instructions below to add them.</div>
+  <div class="card" style="margin-bottom:10px;"><div class="ch"><span class="ct">How to Add API Keys</span><span class="badge bg">One-time setup</span></div><div class="cb">
+    <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+      <strong style="color:var(--accent);">1.</strong> Go to <strong style="color:var(--text);">app.netlify.com</strong> → your site → <strong style="color:var(--text);">Site configuration → Environment variables</strong><br>
+      <strong style="color:var(--accent);">2.</strong> Click <strong style="color:var(--text);">Add a variable</strong> and add each key below<br>
+      <strong style="color:var(--accent);">3.</strong> After adding all keys, go to <strong style="color:var(--text);">Deploys → Trigger deploy</strong> to apply them<br>
+    </div>
+    <div style="margin-top:14px;background:var(--surface2);border-radius:8px;padding:12px;">
+      <div style="font-size:11px;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Variable Names to Add</div>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;color:var(--text);font-family:monospace;">CLAUDE_API_KEY</td><td style="padding:6px 0;color:var(--text2);">From console.anthropic.com/settings/keys</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;color:var(--text);font-family:monospace;">ELEVENLABS_API_KEY</td><td style="padding:6px 0;color:var(--text2);">From elevenlabs.io → Profile</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;color:var(--text);font-family:monospace;">ELEVENLABS_VOICE_ID</td><td style="padding:6px 0;color:var(--text2);">Voices → Julius → Voice ID</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;color:var(--text);font-family:monospace;">RUNWAYML_API_KEY</td><td style="padding:6px 0;color:var(--text2);">app.runwayml.com → Settings → API</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;color:var(--text);font-family:monospace;">RUNPOD_API_KEY</td><td style="padding:6px 0;color:var(--text2);">runpod.io → Settings → API Keys</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text);font-family:monospace;">RUNPOD_ENDPOINT_ID</td><td style="padding:6px 0;color:var(--green);">rsp09b02pp0qy0 ✓ (already set)</td></tr>
+      </table>
+    </div>
+  </div></div>
+  <div class="card"><div class="ch"><span class="ct">Connection Test</span></div><div class="cb">
+    <button class="btn" onclick="testConn()" style="max-width:200px;"><span id="tbt">Test Claude Connection</span></button>
+    <div id="tres" style="margin-top:10px;font-size:12px;color:var(--text2);"></div>
+  </div></div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+let lib=[], audBlob=null, audUrl=null, visUrl=null, lsUrl=null, lpFile=null, laBlob=null, playing=false;
+
+// Nav
+function P(n,b){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');if(b)b.classList.add('active');}
+
+// Toast
+function T(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// Utils
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function cp(id){navigator.clipboard.writeText(document.getElementById(id).innerText);T('Copied!');}
+function cnt(id,d){const e=document.getElementById(id);if(e)e.textContent=parseInt(e.textContent||0)+d;}
+function btn(id,txt,dis){document.getElementById(id).disabled=dis;document.getElementById(id+'t').textContent=txt;}
+
+// API calls — all go through Netlify functions
+async function api(fn, body) {
+  const res = await fetch('/api/'+fn, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  if(!res.ok) {
+    const err = await res.json().catch(()=>({error:'HTTP '+res.status}));
+    throw new Error(err.error||'API error '+res.status);
+  }
+  return res.json();
+}
+
+// Scripts
+const PROMPTS={
+  vlog:`You are Marcus Hill, a streetwear brand builder. Write a 2-min YouTube vlog (~300 words). Hook (0:00-0:10), Setup, Main content with [B-roll cues], Close with teaser. Confident, authentic, peer-to-peer voice.`,
+  tiktok:`You are Marcus Hill. Write a 30-sec TikTok (~75 words). Hook (0:00-0:03), Body, CTA. Include [VISUAL] notes.`,
+  podcast:`You are Marcus Hill. Write 5-8 min podcast (~800 words). WIN / LOSS / STRUGGLE / LESSON structure. Short sentences, contractions, no bullets. Audio-ready.`,
+  carousel:`You are Marcus Hill. Write 6-slide Instagram carousel. Slide 1: hook. Slides 2-5: one useful point each. Slide 6: CTA.`,
+  longform:`You are Marcus Hill. Write 5-min YouTube long-form (~700 words). Hook, Credibility, Main content with B-roll, Results, CTA.`
+};
+
+async function genScript(){
+  const topic=document.getElementById('ct-topic').value.trim();
+  if(!topic){document.getElementById('ct-topic').style.borderColor='var(--red)';setTimeout(()=>document.getElementById('ct-topic').style.borderColor='',2000);return;}
+  btn('sb','Generating...',true);
+  document.getElementById('sl').classList.add('on');
+  document.getElementById('sbadge').textContent='Writing...';
+  document.getElementById('so').textContent='';
+  const type=document.getElementById('ct-type').value;
+  const msg=`Day: ${document.getElementById('ct-day').value}\nTopic: ${topic}\nEnergy: ${document.getElementById('ct-energy').value}\n${document.getElementById('ct-ctx').value?'Context: '+document.getElementById('ct-ctx').value:''}\n\nWrite the complete script now. Make it feel like Marcus actually lived this today.`;
+  try {
+    const data = await api('claude', {model:'claude-sonnet-4-20250514',max_tokens:1000,system:PROMPTS[type],messages:[{role:'user',content:msg}]});
+    const txt=data.content?.map(b=>b.text||'').join('')||'No response.';
+    document.getElementById('so').textContent=txt;
+    document.getElementById('sbadge').textContent='Done ✓';
+    cnt('h-scripts',1);
+  } catch(e){document.getElementById('so').textContent='Error: '+e.message;document.getElementById('sbadge').textContent='Error';}
+  document.getElementById('sl').classList.remove('on');
+  btn('sb','Generate Script',false);
+}
+
+function toVoice(){const t=document.getElementById('so').innerText;if(!t||t.startsWith('Error:'))return;document.getElementById('el-txt').value=t;P('voice',document.querySelectorAll('.nav-btn')[2]);T('Sent to Voice!');}
+
+// Voice
+async function genVoice(){
+  const script=document.getElementById('el-txt').value.trim();
+  if(!script){T('Paste a script first');return;}
+  btn('eb','Rendering...',true);
+  document.getElementById('el').classList.add('on');
+  document.getElementById('ebadge').textContent='Rendering...';
+  try {
+    const data = await api('elevenlabs', {text:script,model_id:'eleven_monolingual_v1',voice_settings:{stability:document.getElementById('el-s').value/100,similarity_boost:document.getElementById('el-m').value/100}});
+    if(!data.audio_base64) throw new Error('No audio returned');
+    const bytes=Uint8Array.from(atob(data.audio_base64),c=>c.charCodeAt(0));
+    const blob=new Blob([bytes],{type:'audio/mpeg'});
+    audBlob=blob; audUrl=URL.createObjectURL(blob);
+    const a=document.getElementById('au'); a.src=audUrl;
+    a.onloadedmetadata=()=>{const m=Math.floor(a.duration/60),s=Math.floor(a.duration%60);document.getElementById('ad').textContent=`${m}:${s.toString().padStart(2,'0')}`;};
+    document.getElementById('at').textContent='Marcus Hill — Podcast';
+    document.getElementById('edl').style.display='inline-flex';
+    document.getElementById('ebadge').textContent='Done ✓';
+    cnt('h-audio',1);
+  } catch(e){T('ElevenLabs: '+e.message);document.getElementById('ebadge').textContent='Error';}
+  document.getElementById('el').classList.remove('on');
+  btn('eb','Generate Julius Voice',false);
+}
+
+function toggleAudio(){const a=document.getElementById('au');const b=document.getElementById('pb');if(!a.src||a.src===location.href){T('Generate audio first');return;}if(playing){a.pause();b.textContent='▶';playing=false;}else{a.play();b.textContent='⏸';playing=true;a.onended=()=>{b.textContent='▶';playing=false;};}}
+function dlAudio(){if(audBlob){const a=document.createElement('a');a.href=audUrl;a.download='marcus-podcast.mp3';a.click();}}
+function toLS(){if(!audBlob){T('Generate audio first');return;}laBlob=audBlob;document.getElementById('laph').style.display='none';document.getElementById('lapr').style.display='block';document.getElementById('lapr').textContent='Voice tab audio · Ready';P('lipsync',document.querySelectorAll('.nav-btn')[4]);T('Sent to Lip Sync!');}
+function useVA(){if(!audBlob){T('Generate audio in Voice tab first');return;}laBlob=audBlob;document.getElementById('laph').style.display='none';document.getElementById('lapr').style.display='block';document.getElementById('lapr').textContent='Voice tab audio · Ready';T('Audio loaded!');}
+
+// Visuals
+const SM={cinematic:'cinematic lighting, editorial fashion',urban:'urban grit, street documentary',clean:'clean lookbook, bright light',dark:'dark moody, dramatic shadows',vintage:'vintage film grain, 35mm'};
+const AM={thumb:'1280:768',broll:'1280:768',tiktok_bg:'768:1280',mood:'1024:1024'};
+
+async function genVisual(){
+  const prompt=document.getElementById('vp').value.trim();
+  if(!prompt){T('Describe the shot first');return;}
+  const type=document.getElementById('vt').value;
+  btn('vb','Sending to RunwayML...',true);
+  document.getElementById('vl').classList.add('on');
+  document.getElementById('vbadge').textContent='Generating...';
+  const fp=`Marcus Hill streetwear: ${prompt}. ${SM[document.getElementById('vs').value]}. Terracotta, black, cream palette.`;
+  try {
+    const task = await api('runway', {action:'create',body:{promptText:fp,model:'gen4_turbo',ratio:AM[type]||'1280:768',duration:parseInt(document.getElementById('vd').value),seed:Math.floor(Math.random()*9999)}});
+    let output=null,att=0;
+    while(!output&&att<40){
+      await sleep(5000);
+      const d=await api('runway',{action:'status',taskId:task.id});
+      if(d.status==='SUCCEEDED'){output=d.output?.[0];break;}
+      if(d.status==='FAILED') throw new Error('RunwayML failed');
+      att++;
+    }
+    if(!output) throw new Error('Timeout');
+    visUrl=output;
+    const isV=type==='broll'||type==='tiktok_bg';
+    document.getElementById('vo').innerHTML=isV?`<video src="${output}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`:`<img src="${output}" style="width:100%;height:100%;object-fit:cover;">`;
+    document.getElementById('vbadge').textContent='Done ✓';
+    document.getElementById('vs2').style.display='inline-flex';
+    document.getElementById('vdl').style.display='inline-flex';
+    addLib({type:'visual',label:'Visual · '+new Date().toLocaleDateString(),url:output});
+    cnt('h-visuals',1);T('Visual done!');
+  } catch(e){T('RunwayML: '+e.message);document.getElementById('vbadge').textContent='Error';}
+  document.getElementById('vl').classList.remove('on');
+  btn('vb','Generate Visual',false);
+}
+function dlVisual(){if(visUrl)window.open(visUrl,'_blank');}
+
+// Lip Sync
+function lpPhoto(e){const f=e.target.files[0];if(!f)return;lpFile=f;const r=new FileReader();r.onload=ev=>{document.getElementById('lpph').style.display='none';const i=document.getElementById('lppr');i.src=ev.target.result;i.style.display='block';};r.readAsDataURL(f);}
+function laAudio(e){const f=e.target.files[0];if(!f)return;laBlob=f;document.getElementById('laph').style.display='none';document.getElementById('lapr').style.display='block';document.getElementById('lapr').textContent=f.name;}
+
+async function genLS(){
+  if(!lpFile){T('Upload a photo first');return;}
+  if(!laBlob){T('Upload or load audio first');return;}
+  btn('lb','Uploading...',true);
+  document.getElementById('ll').classList.add('on');
+  document.getElementById('lbadge').textContent='Processing...';
+  document.getElementById('lpw').style.display='block';
+  document.getElementById('ls').textContent='Preparing files...';
+  try {
+    const toB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob);});
+    const img=await toB64(lpFile);
+    const ab=laBlob instanceof File?laBlob:new Blob([laBlob],{type:'audio/mpeg'});
+    const aud=await toB64(ab);
+    const size=document.getElementById('lf').value;
+    document.getElementById('ls').textContent='Submitting to RunPod...';
+    const job=await api('runpod',{action:'run',input:{image:img,audio:aud,prompt:'Close-up cinematic talking head, warm lighting',size}});
+    const jobId=job.id;
+    btn('lb','Rendering...',true);
+    let output=null,att=0;
+    while(!output&&att<120){
+      await sleep(5000);
+      const poll=await api('runpod',{action:'status',jobId});
+      const pct=Math.min(5+att*1.2,93);
+      document.getElementById('lp').style.width=pct+'%';
+      document.getElementById('ls').textContent=`${poll.status} · ${Math.floor(pct)}% · ${att*5}s`;
+      if(poll.status==='COMPLETED'){
+        if(poll.output?.video_base64){const by=Uint8Array.from(atob(poll.output.video_base64),c=>c.charCodeAt(0));const bl=new Blob([by],{type:'video/mp4'});output=URL.createObjectURL(bl);}
+        else if(poll.output?.video_url) output=poll.output.video_url;
+        break;
+      }
+      if(poll.status==='FAILED') throw new Error('Render failed: '+(poll.error||'unknown'));
+      att++;
+    }
+    if(!output) throw new Error('Timeout — try again');
+    lsUrl=output;
+    document.getElementById('lp').style.width='100%';
+    document.getElementById('lo').innerHTML=`<video src="${output}" controls autoplay loop style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></video>`;
+    document.getElementById('lbadge').textContent='Done ✓';
+    document.getElementById('ls').textContent='Complete!';
+    document.getElementById('lsv').style.display='inline-flex';
+    document.getElementById('ldl').style.display='inline-flex';
+    addLib({type:'lipsync',label:'Lip Sync · '+new Date().toLocaleDateString(),url:output});
+    cnt('h-lipsync',1);T('Lip sync done!');
+  } catch(e){T('Lip Sync: '+e.message);document.getElementById('lbadge').textContent='Error';document.getElementById('ls').textContent='Error: '+e.message;}
+  document.getElementById('ll').classList.remove('on');
+  btn('lb','Generate Lip Sync',false);
+}
+function dlLS(){if(lsUrl){const a=document.createElement('a');a.href=lsUrl;a.download='marcus-lipsync.mp4';a.click();}}
+
+// Library
+function addLib(item){item.id='l'+Date.now();item.date=new Date().toLocaleDateString();lib.unshift(item);renderLib();document.getElementById('ts-l').textContent=lib.length+' items';}
+let cf='all';
+function fLib(f,b){cf=f;document.querySelectorAll('#lf2 .bs').forEach(x=>{x.style.borderColor='';x.style.color='';});if(b){b.style.borderColor='var(--accent2)';b.style.color='var(--accent)';}renderLib();}
+function renderLib(){const g=document.getElementById('lg');const items=cf==='all'?lib:lib.filter(i=>i.type===cf);if(!items.length){g.innerHTML='<div class="le">No items yet.</div>';return;}g.innerHTML=items.map(i=>{let inner=i.url&&(i.type==='visual'||i.type==='lipsync')?(i.type==='lipsync'?`<video src="${i.url}" muted loop autoplay style="width:100%;height:100%;object-fit:cover;"></video>`:`<img src="${i.url}" style="width:100%;height:100%;object-fit:cover;">`):`<div style="padding:10px;font-size:9px;color:var(--text2);height:100%;overflow:hidden;">${(i.text||i.label||'').substring(0,200)}</div>`;return`<div class="li">${inner}<div class="lt">${i.label}</div></div>`;}).join('');}
+function saveLib(type){const m={script:()=>{const t=document.getElementById('so').innerText;if(t&&!t.startsWith('Error:'))addLib({type:'script',label:'Script · '+new Date().toLocaleDateString(),text:t});},audio:()=>{if(audUrl)addLib({type:'audio',label:'Audio · '+new Date().toLocaleDateString(),url:audUrl});},visual:()=>{if(visUrl)addLib({type:'visual',label:'Visual · '+new Date().toLocaleDateString(),url:visUrl});},lipsync:()=>{if(lsUrl)addLib({type:'lipsync',label:'Lip Sync · '+new Date().toLocaleDateString(),url:lsUrl});}};if(m[type]){m[type]();T('Saved!');}};
+
+// Test connection
+async function testConn(){
+  btn('tb','Testing...',true);
+  document.getElementById('tres').textContent='Calling Claude via Netlify function...';
+  try {
+    const data=await api('claude',{model:'claude-sonnet-4-20250514',max_tokens:50,messages:[{role:'user',content:'Say "Marcus Hill dashboard is live!" in exactly those words.'}]});
+    const txt=data.content?.[0]?.text||JSON.stringify(data);
+    document.getElementById('tres').innerHTML=`<span style="color:var(--green);">✓ Connected: ${txt}</span>`;
+  } catch(e){document.getElementById('tres').innerHTML=`<span style="color:var(--red);">✗ Error: ${e.message}</span>`;}
+  btn('tb','Test Claude Connection',false);
+}
+
+// Status display
+function updateStatus(){
+  document.getElementById('ts-l').textContent=lib.length+' items';
+}
+updateStatus();
+</script>
+</body>
+</html>
