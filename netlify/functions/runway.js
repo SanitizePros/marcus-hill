@@ -29,7 +29,7 @@ exports.handler = async (event) => {
       url = 'https://api.dev.runwayml.com/v1/text_to_video';
       fetchBody = JSON.stringify({
         promptText: reqBody.promptText,
-        model: 'gen3a_turbo',
+        model: 'gen4.5',
         ratio: '1280:720',
         duration: reqBody.duration || 5,
         seed: reqBody.seed || Math.floor(Math.random() * 9999)
