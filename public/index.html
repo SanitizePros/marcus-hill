@@ -214,7 +214,7 @@ textarea{resize:vertical;}select option{background:#1A1A1A;}
         </div>
         <button class="bs" style="width:100%;margin-top:5px;" onclick="useVA()">🎙️ Use Voice Tab Audio</button>
       </div>
-      <div class="fw"><div class="fl">Resolution</div><select id="lf"><option value="640*480">480p — Fast (~4 min)</option><option value="1280*720">720p — Quality (~8 min)</option></select></div>
+      <div class="fw"><div class="fl">Resolution</div><select id="lf"><option value="480*832">480p Portrait — Fast (~4 min)</option><option value="720*1280">720p Portrait — Quality (~8 min)</option></select></div>
       <button class="btn" id="lb" onclick="genLS()"><span id="lbt">Generate Lip Sync</span></button>
       <div style="margin-top:6px;font-size:10px;color:var(--text3);text-align:center;">First run ~15 min · Subsequent ~4-8 min</div>
     </div></div>
@@ -379,7 +379,7 @@ async function genVisual(){
   document.getElementById('vbadge').textContent='Generating...';
   const fp=`Marcus Hill streetwear: ${prompt}. ${SM[document.getElementById('vs').value]}. Terracotta, black, cream palette.`;
   try {
-    const task = await api('runway', {action:'create',body:{promptText:fp,model:'gen4.5',ratio:AM[type]||'1280:768',duration:parseInt(document.getElementById('vd').value),seed:Math.floor(Math.random()*9999)}});
+    const task = await api('runway', {action:'create',body:{promptText:fp,duration:parseInt(document.getElementById('vd').value),seed:Math.floor(Math.random()*9999)}});
     let output=null,att=0;
     while(!output&&att<40){
       await sleep(5000);
