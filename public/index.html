@@ -379,7 +379,7 @@ async function genVisual(){
   document.getElementById('vbadge').textContent='Generating...';
   const fp=`Marcus Hill streetwear: ${prompt}. ${SM[document.getElementById('vs').value]}. Terracotta, black, cream palette.`;
   try {
-    const task = await api('runway', {action:'create',body:{promptText:fp,model:'gen4_turbo',ratio:AM[type]||'1280:768',duration:parseInt(document.getElementById('vd').value),seed:Math.floor(Math.random()*9999)}});
+    const task = await api('runway', {action:'create',body:{promptText:fp,model:'gen4.5',ratio:AM[type]||'1280:768',duration:parseInt(document.getElementById('vd').value),seed:Math.floor(Math.random()*9999)}});
     let output=null,att=0;
     while(!output&&att<40){
       await sleep(5000);
